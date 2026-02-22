@@ -4,16 +4,16 @@
 # these values override generic BLE defaults for selected boards.
 
 # Lower NimBLE runtime memory footprint.
-CONFIG_BT_NIMBLE_MAX_CONNECTIONS=2
+CONFIG_BT_NIMBLE_MAX_CONNECTIONS=1
 
 # Run the Bluetooth controller from flash not IRAM.
-CONFIG_BT_CTRL_RUN_IN_FLASH_ONLY=n
+CONFIG_BT_CTRL_RUN_IN_FLASH_ONLY=y
 
 # lwIP adjustments to limit runtime memory usage (at expense of performance,
 # and/or a reduction in number of active connections).
 CONFIG_LWIP_TCPIP_RECVMBOX_SIZE=16
-CONFIG_LWIP_MAX_SOCKETS=6
-CONFIG_LWIP_MAX_ACTIVE_TCP=8
+CONFIG_LWIP_MAX_SOCKETS=3
+CONFIG_LWIP_MAX_ACTIVE_TCP=4
 
 # Keep lwIP buffers scaled to reduced Wi-Fi buffer counts.
 CONFIG_LWIP_TCP_WND_DEFAULT=3072
