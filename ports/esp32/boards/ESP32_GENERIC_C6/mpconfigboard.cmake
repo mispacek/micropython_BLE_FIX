@@ -7,3 +7,5 @@ set(SDKCONFIG_DEFAULTS
     boards/sdkconfig.ble
     boards/sdkconfig.ble_wifi_coex
 )
+
+set(MICROPY_FROZEN_MANIFEST ${MICROPY_BOARD_DIR}/manifest.py)
