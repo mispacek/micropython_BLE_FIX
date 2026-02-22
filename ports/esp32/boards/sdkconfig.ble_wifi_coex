@@ -1,0 +1,28 @@
+# Coexistence profile for low-memory BLE + Wi-Fi use cases.
+#
+# This file is intended to be included after boards/sdkconfig.ble so that
+# these values override generic BLE defaults for selected boards.
+
+# Lower NimBLE runtime memory footprint.
+CONFIG_BT_NIMBLE_MAX_CONNECTIONS=2
+
+# Run the Bluetooth controller from flash not IRAM.
+CONFIG_BT_CTRL_RUN_IN_FLASH_ONLY=y
+
+# lwIP adjustments to limit runtime memory usage (at expense of performance,
+# and/or a reduction in number of active connections).
+CONFIG_LWIP_TCPIP_RECVMBOX_SIZE=16
+CONFIG_LWIP_MAX_SOCKETS=6
+CONFIG_LWIP_MAX_ACTIVE_TCP=8
+
+# Keep lwIP buffers scaled to reduced Wi-Fi buffer counts.
+CONFIG_LWIP_TCP_WND_DEFAULT=3072
+CONFIG_LWIP_TCP_SND_BUF_DEFAULT=3072
+
+# Wi-Fi adjustments to reduce peak runtime memory usage, at expense of peak
+# performance.
+CONFIG_ESP_WIFI_STATIC_RX_BUFFER_NUM=8
+CONFIG_ESP_WIFI_DYNAMIC_RX_BUFFER_NUM=12
+CONFIG_ESP_WIFI_DYNAMIC_TX_BUFFER_NUM=12
+CONFIG_ESP_WIFI_RX_MGMT_BUF_NUM_DEF=2
+CONFIG_ESP_WIFI_RX_BA_WIN=12

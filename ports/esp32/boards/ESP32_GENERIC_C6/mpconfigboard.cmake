@@ -5,4 +5,5 @@ set(SDKCONFIG_DEFAULTS
     boards/sdkconfig.riscv
     boards/sdkconfig.c6
     boards/sdkconfig.ble
+    boards/sdkconfig.ble_wifi_coex
 )
