@@ -7,7 +7,7 @@
 CONFIG_BT_NIMBLE_MAX_CONNECTIONS=2
 
 # Run the Bluetooth controller from flash not IRAM.
-CONFIG_BT_CTRL_RUN_IN_FLASH_ONLY=y
+CONFIG_BT_CTRL_RUN_IN_FLASH_ONLY=n
 
 # lwIP adjustments to limit runtime memory usage (at expense of performance,
 # and/or a reduction in number of active connections).
