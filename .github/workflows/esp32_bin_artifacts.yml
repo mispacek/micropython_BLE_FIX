@@ -1,0 +1,66 @@
+name: ESP32 BIN artifacts
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_bins:
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - ESP32_GENERIC_C3
+          - ESP32_GENERIC_C6
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - id: idf_ver
+      name: Read ESP-IDF version (with Python version)
+      run: tools/ci.sh esp32_idf_ver | tee "${GITHUB_OUTPUT}"
+
+    - name: Cached ESP-IDF install
+      id: cache_esp_idf
+      uses: actions/cache@v5
+      with:
+        path: |
+          ./esp-idf/
+          ~/.espressif/
+          !~/.espressif/dist/
+          ~/.cache/pip/
+        key: esp-idf-${{ steps.idf_ver.outputs.IDF_VER }}
+
+    - name: Install ESP-IDF packages
+      if: steps.cache_esp_idf.outputs.cache-hit != 'true'
+      run: tools/ci.sh esp32_idf_setup
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: esp32-bins-${{ matrix.board }}
+
+    - name: Build ${{ matrix.board }}
+      run: |
+        source tools/ci.sh
+        ci_esp32_build_common
+        make ${MAKEOPTS} -C ports/esp32 BOARD=${{ matrix.board }}
+
+    - name: Upload ${{ matrix.board }} firmware artifacts
+      uses: actions/upload-artifact@v6
+      with:
+        name: ${{ matrix.board }}-firmware
+        path: |
+          ports/esp32/build-${{ matrix.board }}/firmware.bin
+          ports/esp32/build-${{ matrix.board }}/micropython.bin
+          ports/esp32/build-${{ matrix.board }}/bootloader/bootloader.bin
+          ports/esp32/build-${{ matrix.board }}/partition_table/partition-table.bin
+          ports/esp32/build-${{ matrix.board }}/flasher_args.json
+          ports/esp32/build-${{ matrix.board }}/sdkconfig
+          ports/esp32/build-${{ matrix.board }}/micropython.uf2
+        if-no-files-found: error
+        retention-days: 30
